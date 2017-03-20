@@ -1,0 +1,19 @@
+{
+  "name": "tp_node_dlcdpn",
+  "version": "1.0.0",
+  "description": "Tests unitaires et intégration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romwaldtff/REDIR-CDPN-DL17.git"
+  },
+  "author": "DL17 CDPN 9 CDPN 7",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/romwaldtff/REDIR-CDPN-DL17/issues"
+  },
+  "homepage": "https://github.com/romwaldtff/REDIR-CDPN-DL17#readme"
+}
