@@ -2,6 +2,9 @@ const IndexController = require('../dev/IndexController')
 
 describe('IndexController', () => {
     describe('=> index', () => {
+        /**
+         * 
+         */
         it('Should return index view with data', next => {
             const req = {
                 query: {
