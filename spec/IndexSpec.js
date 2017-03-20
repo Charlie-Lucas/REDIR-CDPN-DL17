@@ -3,7 +3,7 @@ const Index = require('../dev/Index');
 describe("Index", () => {
     describe("=> isNoGood", () => {
         /**
-         * 
+         *
          */
         it("Should return false", next => {
             let result = Index.isNoGood(1);
