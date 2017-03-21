@@ -5,12 +5,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-var Url = new Schema({
-    url: String,
-    urlMinified: String,
-    idUser: String
+let url = new Schema({
+    url: { type: String },
+    urlMinified: { type: String },
+    userId : {type: String }
 });
 
-var UrlModel = mongoose.model('user', user);
+let UrlModel = mongoose.model('url', url);
 
-module.exports(UrlModel);
+module.exports = UrlModel;

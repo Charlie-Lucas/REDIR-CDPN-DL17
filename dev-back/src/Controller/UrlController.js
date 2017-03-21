@@ -1,18 +1,14 @@
-const url = require('../Model/Entity/Url.js');
+const UrlModel = require('../Model/Entity/Url.js');
 
 const config = require('../Config/Config.js');
 
 const mongoose = require('mongoose');
 
-function UrlController() {
-
-}
-
 /*
  * Validators
  */
 
-UrlController.prototype.urlValidator = function (url) {
+const urlValidator = (url) => {
 
     /*
      * Filtres URL HTTP/Sans HTTP
@@ -31,7 +27,7 @@ UrlController.prototype.urlValidator = function (url) {
     }
 };
 
-UrlController.prototype.idValidator = function (id) {
+const idValidator = (id) => {
 
     /*
      * Filtre ID
@@ -49,7 +45,7 @@ UrlController.prototype.idValidator = function (id) {
 
 };
 
-UrlController.prototype.genMinStr = function () {
+const genMinStr = () => {
 
     /*
      * 6 Caractères aléatoires pour les URLS minifiées
@@ -73,7 +69,7 @@ UrlController.prototype.genMinStr = function () {
  * Add, Delete & Get Urls
  */
 
-UrlController.prototype.addAction = function (req, res) {
+const addAction = (req, res) => {
 
     let url = req.params.url;
     let userId = req.params.userId;
@@ -88,15 +84,23 @@ UrlController.prototype.addAction = function (req, res) {
                 url: url,
                 urlMinified: urlMin,
                 userId: userId
-            })
+            });
+
+            urlSample.save((err) => {
+                if (err) throw err;
+                console.log('saved')
+            });
         });
     }
     else {
         console.log('Url invalide !')
+        res.send({
+            error: "Url invalide !"
+        });
     }
 };
 
-UrlController.prototype.removeAction = function (req, res) {
+const removeAction = (req, res) => {
 
     let urlId = req.params.urlId;
 
@@ -104,12 +108,17 @@ UrlController.prototype.removeAction = function (req, res) {
         console.log('connected');
 
         UrlModel.remove({_id: urlId}, (err, response) => {
-            console.log(err, response)
+            // ajout de "succes msg" ?
+            if (err) {
+                res.send({
+                    error: "Echec de suppression"
+                });
+            }
         })
     });
 };
 
-UrlController.prototype.getUrlsAction = function (req, res) {
+const getUrlsAction = (req, res) => {
 
     let userId = req.params.userId;
 
@@ -117,12 +126,17 @@ UrlController.prototype.getUrlsAction = function (req, res) {
         console.log('connected');
 
         UrlModel.find({userId: userId}, (err, response) => {
-            console.log(response)
+            if (err) {
+                res.send({
+                    error: "Echec de suppression"
+                });
+            }
+            res.status(200).send(response);
         });
     });
 };
 
-UrlController.prototype.getBigUrlByMinUrl = function (req, res) {
+const getBigUrlByMinUrl = (req, res) => {
 
     let urlMin = req.params.urlMin;
 
@@ -130,8 +144,19 @@ UrlController.prototype.getBigUrlByMinUrl = function (req, res) {
         console.log('connected');
 
         UrlModel.find({urlMinified: urlMin}, (err, response) => {
-            console.log(response[0].url)
-
+            return response[0].url;
+            if (err) {
+                res.send({
+                    error: "Echec de suppression"
+                });
+            }
         });
     });
 };
+
+module.exports = {
+    addAction: addAction,
+    removeAction: removeAction,
+    getUrlsAction: getUrlsAction,
+    getBigUrlByMinUrl: getBigUrlByMinUrl
+}
