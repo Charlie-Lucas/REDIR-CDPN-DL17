@@ -79,32 +79,45 @@ UrlController.prototype.addAction = function (req, res) {
     let userId = req.params.userId;
 
     if (this.urlValidator(url) === true) {
-        this.genMinStr();
+        let urlMin = this.genMinStr();
 
-        /*
-         * AJOUT EN BDD : addByUserId
-         */
+        mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+            console.log('connected');
+
+            let urlSample = new UrlModel({
+                url: url,
+                urlMinified: urlMin,
+                userId: userId
+            })
+        });
     }
     else {
         console.log('Url invalide !')
     }
-
 };
 
 UrlController.prototype.removeAction = function (req, res) {
 
     let urlId = req.params.urlId;
 
-    /*
-     * Delete en BDD : findUrlById
-     */
+    mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+        console.log('connected');
+
+        UrlModel.remove({_id: urlId}, (err, response) => {
+            console.log(err, response)
+        })
+    });
 };
 
 UrlController.prototype.getUrlsAction = function (req, res) {
 
     let userId = req.params.userId;
 
-    /*
-     * Recherche en BDD : 'findAllUrlsByUserId'
-     */
+    mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+        console.log('connected');
+
+        UrlModel.find({userId: userId}, (err, response) => {
+            console.log(response)
+        });
+    });
 };
