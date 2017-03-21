@@ -16,14 +16,18 @@ UserController.prototype.emailValidator = function (email) {
     if (emailValidator.validate(email)) {
         // check that email is unique
         db.users.find({email: email}, (err, result) => {
-            if (error) {
-                throw err;
+            if (err) {
+                res.send({
+                    error: err
+                });
             }
             //if result is not empty list  !=[]
-            return !result.length ? true : "Votre email existe déjà";
+            return !result.length ? true : {error: "Votre email existe déjà"};
         });
     } else {
-        return "Votre email n'est pas valide";
+        return {
+            error: "Votre email n'est pas valide"
+        };
     }
 };
 
@@ -34,18 +38,19 @@ UserController.prototype.passwordValidator = function (password) {
     if (regex.test(password)) {
         return true;
     } else {
-        return "Le password doit contenir 5 caractères minimum, dont une majuscule, une minuscule, un chiffre et un caractère spécial(!, $, #,?)";
+        return {
+            error: "Le password doit contenir 5 caractères minimum, dont une majuscule, une minuscule, un chiffre et un caractère spécial(!, $, #,?)"
+        };
     }
 
 };
 
-/*UserController.prototype.passwordConfirm = function(password, confirmedPassword){
- return (password === confirmedPassword);
- };*/
+UserController.prototype.passwordConfirm = function(password, confirmedPassword){
+    return (password === confirmedPassword);
+ };
 
-//get register view
-UserController.prototype.registerAction = function (req, res) {
-    res.render('/register', {});
+UserController.prototype.passwordHash = function(password){
+    return passwordHash.generate(password);
 };
 
 //on submit
@@ -54,33 +59,34 @@ UserController.prototype.signUpAction = function (req, res) {
     let _self = this;
     if (_self.emailValidator(post.email) === true) {
 
-        if (post.password === post.passwordConfirmed) {
-
+        if (_self.passwordConfirm(post.password, post.passwordConfirmed)) {
 
             mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
 
-                let newUser = new UserModel({email: post.email, password: passwordHash.generate(post.password)});
+                let newUser = new UserModel({email: post.email, password: _self.passwordHash(post.password)});
 
                 newUser.save((err) => {
-                    if (err) throw err;
-                    console.log('User saved to database !')
+                    if (err) {
+                        res.send({
+                            error: err
+                        });
+                    }
+                    console.log('User saved to database !');
+                    res.send(newUser);
                 });
-                res.redirect('/connect');
             });
 
-        } else {
+        }else {
             console.log("Le mot de passe doit etre le meme");
+            res.send({
+                error: "Le mot de passe doit etre le meme"
+            });
         }
 
     } else {
-        let error = _self.emailValidator(post.email);
-        console.log(error);
+        console.log(_self.emailValidator(post.email).error);
+        res.send(_self.emailValidator(post.email));
     }
-};
-
-//get connect view
-UserController.prototype.connectAction = function (req, res) {
-    res.render('/connect', {});
 };
 
 //on submit
@@ -90,17 +96,26 @@ UserController.prototype.loginAction = function (req, res) {
         email: post.email
     }, (err, user) => {
         if (err) {
-            throw err;
+            console.log(err);
+            res.send({
+                error: err
+            });
         }
         if (user) {
             if (passwordHash.verify(post.password, user.password)) {
                 app.locals.user = user; //localStorage.setItem('user', user);
-                res.redirect('/');
+                res.send(user);
             } else {
                 console.log('Votre mot de passe est incorrect');
+                res.send({
+                    error: 'Votre mot de passe est incorrect'
+                });
             }
         } else {
             console.log('You have to register first');
+            res.send({
+                error: "Ce compte n'été pas trouvé"
+            });
         }
     });
 
@@ -109,12 +124,6 @@ UserController.prototype.loginAction = function (req, res) {
 UserController.prototype.logoutAction = function (req, res) {
     //TODO
     res.redirect('/connect');
-};
-
-//get index view
-UserController.prototype.indexAction = function (req, res) {
-    //TODO
-    res.render('/', {});
 };
 
 module.exports = UserController();
