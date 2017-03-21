@@ -19,4 +19,9 @@ router.get('/urls/:userId', urlController.getUrlsAction);
 
 //router.delete('/remove-url/:id(\\d+)', userController.removeAction);
 
+//url roots
+router.get('/urls', urlController.getUrlsAction);
+router.post('/urls', userController.addAction);
+router.delete('/urls/:id(\\d+)', userController.removeAction);
+
 module.exports = router;

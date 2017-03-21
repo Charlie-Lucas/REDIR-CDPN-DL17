@@ -17,7 +17,7 @@ UserController.prototype.emailValidator = function (email) {
         // check that email is unique
         db.users.find({email: email}, (err, result) => {
             if (err) {
-                res.send({
+                res.status(500).send({
                     error: err
                 });
             }
@@ -67,25 +67,25 @@ UserController.prototype.signUpAction = function (req, res) {
 
                 newUser.save((err) => {
                     if (err) {
-                        res.send({
+                        res.status(500).send({
                             error: err
                         });
                     }
                     console.log('User saved to database !');
-                    res.send(newUser);
+                    res.status(200).send(newUser);
                 });
             });
 
         }else {
             console.log("Le mot de passe doit etre le meme");
-            res.send({
+            res.status(400).send({
                 error: "Le mot de passe doit etre le meme"
             });
         }
 
     } else {
         console.log(_self.emailValidator(post.email).error);
-        res.send(_self.emailValidator(post.email));
+        res.status(400).send(_self.emailValidator(post.email));
     }
 };
 
@@ -97,23 +97,23 @@ UserController.prototype.loginAction = function (req, res) {
     }, (err, user) => {
         if (err) {
             console.log(err);
-            res.send({
+            res.status(500).send({
                 error: err
             });
         }
         if (user) {
             if (passwordHash.verify(post.password, user.password)) {
                 app.locals.user = user; //localStorage.setItem('user', user);
-                res.send(user);
+                res.status(200).send(user);
             } else {
                 console.log('Votre mot de passe est incorrect');
-                res.send({
+                res.status(403).send({
                     error: 'Votre mot de passe est incorrect'
                 });
             }
         } else {
             console.log('You have to register first');
-            res.send({
+            res.status(403).send({
                 error: "Ce compte n'été pas trouvé"
             });
         }
@@ -122,8 +122,10 @@ UserController.prototype.loginAction = function (req, res) {
 };
 
 UserController.prototype.logoutAction = function (req, res) {
-    //TODO
-    res.redirect('/connect');
+    app.locals.user = null;
+    res.status(200).send({
+        success: 'Vous etes deconnecté'
+    });
 };
 
 module.exports = UserController();
