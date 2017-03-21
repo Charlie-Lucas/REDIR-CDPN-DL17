@@ -1,7 +1,10 @@
 const user = require('../Model/Entity/User.js');
+
 const emailValidator = require('email-validator');
 //npm install password-hash --save
 const passwordHash = require('password-hash');
+
+const mongoose = require('mongoose');
 
 function UserController() {
 

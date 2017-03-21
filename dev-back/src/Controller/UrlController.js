@@ -1,5 +1,8 @@
 const url = require('../Model/Entity/Url.js');
+
 const config = require('../Config/Config.js');
+
+const mongoose = require('mongoose');
 
 function UrlController() {
 
@@ -46,7 +49,7 @@ UrlController.prototype.idValidator = function (id) {
 
 };
 
-UrlController.prototype.minifyUrl = function () {
+UrlController.prototype.genMinStr = function () {
 
     /*
      * 6 Caractères aléatoires pour les URLS minifiées
@@ -66,25 +69,42 @@ UrlController.prototype.minifyUrl = function () {
 
 };
 
+/*
+ * Add, Delete & Get Urls
+ */
+
 UrlController.prototype.addAction = function (req, res) {
+
     let url = req.params.url;
+    let userId = req.params.userId;
 
     if (this.urlValidator(url) === true) {
-        this.minifyUrl();
+        this.genMinStr();
 
         /*
-         * AJOUT EN BDD
+         * AJOUT EN BDD : addByUserId
          */
     }
     else {
         console.log('Url invalide !')
     }
+
 };
 
 UrlController.prototype.removeAction = function (req, res) {
 
+    let urlId = req.params.urlId;
+
+    /*
+     * Delete en BDD : findUrlById
+     */
 };
 
 UrlController.prototype.getUrlsAction = function (req, res) {
 
+    let userId = req.params.userId;
+
+    /*
+     * Recherche en BDD : 'findAllUrlsByUserId'
+     */
 };
