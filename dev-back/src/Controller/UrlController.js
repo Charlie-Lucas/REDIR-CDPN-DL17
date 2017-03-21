@@ -113,7 +113,11 @@ UrlController.prototype.getUrlsAction = function (req, res) {
 
     let userId = req.params.userId;
 
-    UrlModel.find({userId: userId}, (err, response) => {
-        console.log(response)
+    mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+        console.log('connected');
+
+        UrlModel.find({userId: userId}, (err, response) => {
+            console.log(response)
+        });
     });
 };
