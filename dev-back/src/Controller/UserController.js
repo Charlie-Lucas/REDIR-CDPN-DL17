@@ -61,7 +61,7 @@ UserController.prototype.signUpAction = function (req, res) {
 
                 let newUser = new UserModel({email: post.email, password: passwordHash.generate(post.password)});
 
-                    newUser.save((err) => {
+                newUser.save((err) => {
                     if (err) throw err;
                     console.log('User saved to database !')
                 });
