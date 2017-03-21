@@ -1,4 +1,5 @@
 const url = require('../Model/Entity/Url.js');
+const config = require('../Config/Config.js');
 
 function UrlController() {
 
@@ -58,7 +59,7 @@ UrlController.prototype.minifyUrl = function () {
         generatedUrl += randomChar.charAt(Math.floor(Math.random() * randomChar.length));
     }
 
-    generatedUrl = 'http://'+ BASE_URL+'/'+generatedUrl;
+    generatedUrl = 'http://' + config.BASE_URL + '/' + generatedUrl;
     // Exemple : http://momo-bibi.com/AF94D6
 
     return generatedUrl;
