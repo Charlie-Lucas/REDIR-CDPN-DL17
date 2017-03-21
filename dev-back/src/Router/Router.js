@@ -16,9 +16,9 @@ router.post('/connect', userController.loginAction);
 router.get('/logout', userController.logoutAction);
 
 //url roots
-router.get('/get-urls', urlController.getUrlsAction);
-router.put('/add-url', userController.addAction);
+router.get('/urls', urlController.getUrlsAction);
+router.post('/add-url', userController.addAction);
 
-router.delete('/remove-url', userController.removeAction);
+router.delete('/remove-url/:id(\\d+)', userController.removeAction);
 
 module.exports = router;

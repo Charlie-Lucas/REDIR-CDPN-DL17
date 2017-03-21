@@ -1,7 +1,7 @@
 const user = require('../Model/Entity/User.js');
 const emailValidator = require('email-validator');
+//npm install password-hash --save
 const passwordHash = require('password-hash');
-//npm install password-hash
 
 function UserController(){
 
@@ -12,9 +12,9 @@ UserController.prototype.emailValidator = function (email){
 
     if (emailValidator.validate(email)){
         // check that email is unique
-        db.user.find({email: email}, (error, result)=>{
+        db.users.find({email: email}, (err, result)=>{
             if(error){
-                throw error;
+                throw err;
             }
             //if result is not empty list  !=[]
             return !result.length ? true : "Votre email existe déjà";
@@ -52,11 +52,17 @@ UserController.prototype.signUpAction = function(req, res){
     if (_self.emailValidator(post.email) === true ){
 
         if( post.password === post.passwordConfirmed ){
-            db.user.insert({
+            db.users.insert({
                 email: post.email,
                 password: passwordHash.generate(post.password)
+            }, (err, result)=>{
+                if(error){
+                    throw err;
+                }
+                console.log('saved');
+                res.redirect('/connect');
             });
-            res.redirect('/connect');
+
         }else {
             console.log("Le mot de passe doit etre le meme");
         }
@@ -75,19 +81,24 @@ UserController.prototype.connectAction = function(req, res){
 //on submit
 UserController.prototype.loginAction = function(req, res){
     let post = req.body;
-    let user = db.user.find({
+    db.user.find({
         email: post.email
-    });
-    if (user){
-        if ( passwordHash.verify(post.password, user.password) ){
-            app.locals.user = user; //localStorage.setItem('user', user);
-            res.redirect('/');
-        } else {
-            console.log('Votre mot de passe est incorrect');
+    }, (err, user)=>{
+        if(err){
+            throw err;
         }
-    }else{
-        console.log('You have to register first');
-    }
+        if (user){
+            if ( passwordHash.verify(post.password, user.password) ){
+                app.locals.user = user; //localStorage.setItem('user', user);
+                res.redirect('/');
+            } else {
+                console.log('Votre mot de passe est incorrect');
+            }
+        }else{
+            console.log('You have to register first');
+        }
+    });
+
 };
 
 UserController.prototype.logoutAction = function(req, res){
