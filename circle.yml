@@ -1,23 +1,27 @@
 machine:
-  timezone:
-    Europe/Paris
-  node:
-    version: 6.1.0
-    pre:
-      - cd dev-front
-
+    timezone:
+        Europe/Paris
+    node:
+        version: v6.1.0
+        
 dependencies:
-  override:
-     - npm install npm@latest -g
-     - npm install && bower install
-     - webdriver-manager update
-  post:
-      - webdriver-manager start:
-            background: true
-      - sleep 5
+    pre:
+        - npm install npm@latest -g
+        - npm install -g protractor
+        - npm install -g gulp
+    override:
+        - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        - sudo dpkg -i google-chrome-stable_current_amd64.deb
+        - webdriver-manager update
+        - npm install
+        - cd dev-front && npm install && bower install && cd ..
 
 test:
-  pre:
-    - gulp serve
-  override:
-    - npm run test
+    pre:
+        - webdriver-manager start:
+            background: true
+        - cd dev-front && gulp serve && cd ..:
+            background: true
+        - sleep 5
+    override:
+        - cd dev-front && npm run test && cd ..
