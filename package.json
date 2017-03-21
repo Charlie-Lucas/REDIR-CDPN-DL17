@@ -4,7 +4,9 @@
   "description": "TP Redirection",
   "main": "index.js",
   "dependencies": {
-    "jasmine-node": "^1.14.5"
+    "email-validator": "^1.0.7",
+    "jasmine-node": "^1.14.5",
+    "password-hash": "^1.2.2"
   },
   "devDependencies": {},
   "scripts": {
