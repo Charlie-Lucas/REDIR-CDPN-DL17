@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })); //express().use(..)
 // parse application/json
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'dev-front')));
 
 /*app.use(function(req,res, next){
  console.log('test de passage obligatoire');
@@ -26,8 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 /****************** Templates *********************/
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'src', 'views'));
+//app.set('view engine', 'pug');
+//app.set('views', path.join(__dirname, 'src', 'views'));
 
 
 /******************* Router ***********************/

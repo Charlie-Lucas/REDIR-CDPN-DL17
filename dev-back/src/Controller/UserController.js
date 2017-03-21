@@ -1,4 +1,4 @@
-const user = require('../Model/Entity/User.js');
+const UserModel = require('../Model/Entity/User.js');
 
 const emailValidator = require('email-validator');
 //npm install password-hash --save
