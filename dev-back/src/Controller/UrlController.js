@@ -71,11 +71,11 @@ const genMinStr = () => {
 
 const addAction = (req, res) => {
 
-    let url = req.params.url;
-    let userId = req.params.userId;
+    let url = req.body.url;
+    let userId = req.body.userId;
 
-    if (this.urlValidator(url) === true) {
-        let urlMin = this.genMinStr();
+    if (urlValidator(url) === true) {
+        let urlMin = genMinStr();
 
         mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
             console.log('connected');
@@ -89,6 +89,7 @@ const addAction = (req, res) => {
             urlSample.save((err) => {
                 if (err) throw err;
                 console.log('saved')
+                res.status(200).send('Url crée avec succès');
             });
         });
     }
@@ -103,17 +104,17 @@ const addAction = (req, res) => {
 const removeAction = (req, res) => {
 
     let urlId = req.params.urlId;
-
     mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
         console.log('connected');
 
+
         UrlModel.remove({_id: urlId}, (err, response) => {
-            // ajout de "succes msg" ?
             if (err) {
                 res.send({
                     error: "Echec de suppression"
                 });
             }
+            res.status(200).send('Url supprimée avec succès');
         })
     });
 };
@@ -139,16 +140,22 @@ const getUrlsAction = (req, res) => {
 const getBigUrlByMinUrl = (req, res) => {
 
     let urlMin = req.params.urlMin;
+    console.log(urlMin);
 
     mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
         console.log('connected');
 
-        UrlModel.find({urlMinified: urlMin}, (err, response) => {
-            return response[0].url;
+        UrlModel.find({urlMinified: 'http://' + config.BASE_URL + '/' + urlMin}, (err, response) => {
             if (err) {
                 res.send({
-                    error: "Echec de suppression"
+                    error: "Echec"
                 });
+            }
+            if (response.length > 0) {
+                res.status(200).send(response[0].url);
+            }
+            else {
+                res.status(404).send('URL Introuvable')
             }
         });
     });
@@ -159,4 +166,4 @@ module.exports = {
     removeAction: removeAction,
     getUrlsAction: getUrlsAction,
     getBigUrlByMinUrl: getBigUrlByMinUrl
-}
+};
