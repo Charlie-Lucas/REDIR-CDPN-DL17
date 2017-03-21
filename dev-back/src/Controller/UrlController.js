@@ -107,14 +107,14 @@ const removeAction = (req, res) => {
     mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
         console.log('connected');
 
-
         UrlModel.remove({_id: urlId}, (err, response) => {
             if (err) {
                 res.send({
                     error: "Echec de suppression"
                 });
+            } else {
+                res.status(200).send('Url supprimée avec succès');
             }
-            res.status(200).send('Url supprimée avec succès');
         })
     });
 };
@@ -129,10 +129,12 @@ const getUrlsAction = (req, res) => {
         UrlModel.find({userId: userId}, (err, response) => {
             if (err) {
                 res.send({
-                    error: "Echec de suppression"
+                    error: "Echec"
                 });
             }
-            res.status(200).send(response);
+            else {
+                res.status(200).send(response);
+            }
         });
     });
 };
