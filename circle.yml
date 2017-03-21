@@ -5,10 +5,10 @@ machine:
     version: 6.1.0
     pre:
       - cd dev-front
-    post:
 
 dependencies:
   override:
+     - npm install npm@latest -g
      - npm install && bower install
      - webdriver-manager update
   post:
