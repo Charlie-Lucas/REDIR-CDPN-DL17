@@ -1,19 +1,15 @@
 const UserModel = require('../Model/Entity/User.js');
 
-const emailValidator = require('email-validator');
+const validator = require('email-validator');
 //npm install password-hash --save
-const passwordHash = require('password-hash');
+const hash = require('password-hash');
 
 const mongoose = require('mongoose');
 
-function UserController() {
-
-}
-
 //validate that email is valid and verifies that email doesn't exist in database
-UserController.prototype.emailValidator = function (email) {
+const emailValidator = (email) => {
 
-    if (emailValidator.validate(email)) {
+    if (validator.validate(email)) {
         // check that email is unique
         db.users.find({email: email}, (err, result) => {
             if (err) {
@@ -31,7 +27,7 @@ UserController.prototype.emailValidator = function (email) {
     }
 };
 
-UserController.prototype.passwordValidator = function (password) {
+const passwordValidator = (password)=> {
 
     //password contains one digit, one lowercase letter, one capital letter, one special character, > 5 characters
     let regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!$#?]).{5,}/;
@@ -45,21 +41,21 @@ UserController.prototype.passwordValidator = function (password) {
 
 };
 
-UserController.prototype.passwordConfirm = function(password, confirmedPassword){
+const passwordConfirm = (password, confirmedPassword)=>{
     return (password === confirmedPassword);
  };
 
-UserController.prototype.passwordHash = function(password){
-    return passwordHash.generate(password);
+const passwordHash = (password) => {
+    return hash.generate(password);
 };
 
 //on submit
-UserController.prototype.signUpAction = function (req, res) {
+const signUpAction = (req, res) => {
     let post = req.body;
-    let _self = this;
-    if (_self.emailValidator(post.email) === true) {
 
-        if (_self.passwordConfirm(post.password, post.passwordConfirmed)) {
+    if (emailValidator(post.email) === true) {
+
+        if (passwordConfirm(post.password, post.passwordConfirmed)) {
 
             mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
 
@@ -84,13 +80,13 @@ UserController.prototype.signUpAction = function (req, res) {
         }
 
     } else {
-        console.log(_self.emailValidator(post.email).error);
-        res.status(400).send(_self.emailValidator(post.email));
+        console.log(emailValidator(post.email).error);
+        res.status(400).send(emailValidator(post.email));
     }
 };
 
 //on submit
-UserController.prototype.loginAction = function (req, res) {
+const loginAction =  (req, res) => {
     let post = req.body;
     db.user.find({
         email: post.email
@@ -102,7 +98,7 @@ UserController.prototype.loginAction = function (req, res) {
             });
         }
         if (user) {
-            if (passwordHash.verify(post.password, user.password)) {
+            if (hash.verify(post.password, user.password)) {
                 app.locals.user = user; //localStorage.setItem('user', user);
                 res.status(200).send(user);
             } else {
@@ -121,11 +117,15 @@ UserController.prototype.loginAction = function (req, res) {
 
 };
 
-UserController.prototype.logoutAction = function (req, res) {
+const logoutAction = (req, res) => {
     app.locals.user = null;
     res.status(200).send({
         success: 'Vous etes deconnecté'
     });
 };
 
-module.exports = UserController();
+module.exports = {
+    signUpAction: signUpAction,
+    loginAction: loginAction,
+    logoutAction: logoutAction
+};
