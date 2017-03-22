@@ -17,13 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })); //express().use(..)
 // parse application/json
 app.use(bodyParser.json());
 
-//app.use(express.static(path.join(__dirname, 'dev-front')));
-
-/*app.use(function(req,res, next){
- console.log('test de passage obligatoire');
- next();
- })*/
-
+//app.use(express.static(path.join(__dirname, 'public')));
 
 /****************** Templates *********************/
 //app.set('view engine', 'pug');
