@@ -37,7 +37,7 @@ const idValidator = (id) => {
 
     let regex1 = new RegExp(filter1);
 
-    if (url.match(regex1)) {
+    if (id.match(regex1)) {
         return true;
     } else {
         return false;
