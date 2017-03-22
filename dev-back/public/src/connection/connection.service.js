@@ -6,7 +6,7 @@
 
         function connect(formData) {
 			var request = {
-					url: 'http://localhost/connect',
+					url: 'http://localhost/api/connect',
 					method: 'POST',
 					data: {
 						email: formData.email,

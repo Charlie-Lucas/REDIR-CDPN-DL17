@@ -6,7 +6,7 @@
 
         function register(formData) {
 			var request = {
-					url: 'http://localhost/register',
+					url: 'http://localhost/api/register',
 					method: 'POST',
 					data: {
 						email: formData.email,
