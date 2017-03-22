@@ -1,0 +1,67 @@
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+  console.log('connected')
+
+ var url = new Schema({
+    url: { type: String },
+    urlMinified: { type: String },
+    userId : {type: String }
+  })
+
+ var UrlModel = mongoose.model('url', url);
+
+ var urlSample = new UrlModel({url:"http://twitter.fr", urlMinified:"FEJjds41", userId:"58d0de13ad6bf24d0082e231"})
+
+
+//CREATE NEW URL (urlSample is an example object)
+
+ // urlSample.save((err) => {
+ //    if (err) throw err;
+ //    console.log('saved')
+ //  });
+
+//SELECT ALL URL BY USER
+
+ // UrlModel.find({userId:"58d0de13ad6bf24d0082e231"} , (err, response) => {
+ //   console.log(response)
+ // });
+
+//SELECT BIG URL BY MINIFIED URL
+
+// UrlModel.find({urlMinified:"http://goo.gle"} , (err, response) => {
+//  console.log(response[0].url)
+// });
+
+//DELETE URL BY SOMETHING
+
+// UrlModel.remove({_id:"58d10a4dec23050bd8ec1148"},(err,response)=>{
+//   console.log(err,response)
+// })
+
+//FIND BY ID & UPDATE ANY PROPERTY
+
+// UrlModel.findById("58d10a4dec23050bd8ec1148", function(err, url) {
+//   if (err) throw err;
+//   url.urlMinified = 'dJfJ45';
+//   url.save(function(err) {
+//     if (err) throw err;
+//     console.log('Url successfully updated!')
+//     console.log(url);
+//     });
+//   });
+
+// FIND BY SOMETHING & UPDATE ANY PROPERTY
+
+  // UrlModel.find({urlMinified:"fdKf4Fs"}, (err, response) => {
+  //   if (err) throw err;
+  //   response[0].url = 'http://jeanmichel.fr';
+  //   response[0].save(function(err) {
+  //     if (err) throw err;
+  //     console.log('Url successfully updated!')
+  //     console.log(response[0]);
+  //   });
+  // });
+
+});
