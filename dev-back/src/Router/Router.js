@@ -11,8 +11,8 @@ router.get('/logout', userController.logoutAction);
 
 //url routes
 router.get('/urls/:userId', urlController.getUrlsAction);
+//router.get('/urls', urlController.getUrlsAction);
 router.post('/urls', urlController.addAction);
-router.get('/urls', urlController.getUrlsAction);
 router.delete('/urls/:urlId', urlController.removeAction);
 router.get('/:urlMin', urlController.getBigUrlByMinUrl);
 
