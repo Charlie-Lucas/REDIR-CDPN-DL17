@@ -1,12 +1,12 @@
 (function(){
 	'use strict';
-	var app = angular.module('register');
+	var app = angular.module('connection');
 
-	app.factory('registerService', function($http){
+	app.factory('connectionService', function($http){
 
-        function register(formData) {
+        function connect(formData) {
 			var request = {
-					url: 'http://localhost/register',
+					url: 'http://localhost/connect',
 					method: 'POST',
 					data: {
 						email: formData.email,

@@ -3,11 +3,11 @@
 
     var app = angular.module('register');
 
-    app.controller('RegisterController', function($location){
+    app.controller('RegisterController', function($location, $scope, registerService){
         var vm = this;
 
-        vm.sendForm = function($scope) {
-			vm.toto = 'Toto';
+        vm.sendForm = function() {
+			registerService.register(vm.formData);
 		};
     });
 })();
