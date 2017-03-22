@@ -21,7 +21,6 @@ test:
         - webdriver-manager start:
             background: true
         - node dev-back/app.js:
-            background: true
         - sleep 5
     override:
         - npm run test
