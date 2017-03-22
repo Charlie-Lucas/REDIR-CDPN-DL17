@@ -35,7 +35,7 @@ const idValidator = (id) => {
 
     let filter1 = /^[a-z0-9]{24}/;
 
-    let regex1 = new RegExp(expression);
+    let regex1 = new RegExp(filter1);
 
     if (url.match(regex1)) {
         return true;
@@ -59,7 +59,7 @@ const genMinStr = () => {
     }
 
     generatedUrl = 'http://' + config.BASE_URL + '/' + generatedUrl;
-    // Exemple : http://momo-bibi.com/AF94D6
+    // Exemple : http://momo-bibi.com/af94D6
 
     return generatedUrl;
 
@@ -74,29 +74,37 @@ const addAction = (req, res) => {
     let url = req.body.url;
     let userId = req.body.userId;
 
-    if (urlValidator(url) === true) {
-        let urlMin = genMinStr();
+    if (idValidator(urlId) === true) {
 
-        mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
-            console.log('connected');
+        if (urlValidator(url) === true) {
+            let urlMin = genMinStr();
 
-            let urlSample = new UrlModel({
-                url: url,
-                urlMinified: urlMin,
-                userId: userId
+            mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+                console.log('connected');
+
+                let urlSample = new UrlModel({
+                    url: url,
+                    urlMinified: urlMin,
+                    userId: userId
+                });
+
+                urlSample.save((err) => {
+                    if (err) throw err;
+                    console.log('saved')
+                    res.status(200).send('Url crée avec succès');
+                });
             });
-
-            urlSample.save((err) => {
-                if (err) throw err;
-                console.log('saved')
-                res.status(200).send('Url crée avec succès');
+        }
+        else {
+            console.log('Url invalide !')
+            res.send({
+                error: "Url invalide !"
             });
-        });
+        }
     }
     else {
-        console.log('Url invalide !')
         res.send({
-            error: "Url invalide !"
+            error: "Invalid Id."
         });
     }
 };
@@ -104,45 +112,61 @@ const addAction = (req, res) => {
 const removeAction = (req, res) => {
 
     let urlId = req.params.urlId;
-    mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
-        console.log('connected');
 
-        UrlModel.remove({_id: urlId}, (err, response) => {
-            if (err) {
-                res.send({
-                    error: "Echec de suppression"
-                });
-            } else {
-                res.status(200).send('Url supprimée avec succès');
-            }
-        })
-    });
+    if (idValidator(urlId) === true) {
+
+        mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+            console.log('connected');
+
+            UrlModel.remove({_id: urlId}, (err, response) => {
+                if (err) {
+                    res.send({
+                        error: "Echec de suppression"
+                    });
+                } else {
+                    res.status(200).send('Url supprimée avec succès');
+                }
+            })
+        });
+    }
+    else {
+        res.send({
+            error: "Invalid Id."
+        });
+    }
 };
 
 const getUrlsAction = (req, res) => {
 
     let userId = req.params.userId;
 
-    mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
-        console.log('connected');
+    if (idValidator(userId) === true) {
 
-        UrlModel.find({userId: userId}, (err, response) => {
-            if (err) {
-                res.send({
-                    error: "Echec"
-                });
-            }
-            else {
-                res.status(200).send(response);
-            }
+        mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
+            console.log('connected');
+
+            UrlModel.find({userId: userId}, (err, response) => {
+                if (err) {
+                    res.send({
+                        error: "Echec"
+                    });
+                }
+                else {
+                    res.status(200).send(response);
+                }
+            });
         });
-    });
+    }
+    else {
+        res.send({
+            error: "Invalid Id."
+        });
+    }
 };
 
 const getBigUrlByMinUrl = (req, res) => {
 
     let urlMin = req.params.urlMin;
-    console.log(urlMin);
 
     mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
         console.log('connected');
@@ -155,6 +179,7 @@ const getBigUrlByMinUrl = (req, res) => {
             }
             if (response.length > 0) {
                 res.status(200).send(response[0].url);
+                //ajouter la redirection vers la big url
             }
             else {
                 res.status(404).send('URL Introuvable')
