@@ -222,7 +222,7 @@ const loginAction =  (req, res) => {
 const logoutAction = (req, res) => {
     const userId = req.params.userId;
     for( let i=0; i< app.locals.users.length; i++){
-        if( user.id == userId){
+        if( app.locals.users[i]._id == userId){
             app.locals.users.splice(i, 1);
             res.status(200).send({
                 success: 'Vous êtes deconnecté'
