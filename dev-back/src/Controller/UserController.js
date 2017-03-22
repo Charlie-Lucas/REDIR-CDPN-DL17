@@ -27,15 +27,15 @@ const emailValidator = (email, callback) => {
                 callback({error: err, statusCode: 500});
             }*/
 
-            UserModel.find({email: email}, (err, result) => {
+            UserModel.find({ email: email }, (err, result) => {
                 console.log('Error' + err);
                 console.log('Result' + result);
                 if (err) {
-                    callback({error: err, statusCode: 500});
+                    callback({ error: err, statusCode: 500 });
                 }
 
                 //if result is not empty list  !=[]
-                callback(!result.length ? true : {error: "Votre email existe déjà"});
+                callback(!result.length ? true : { error: "Votre email existe déjà" });
             });
         });
 
@@ -51,7 +51,7 @@ const emailValidator = (email, callback) => {
  * @param {string} password
  * @returns {boolean|Object} true or {error: 'Error message'}
  */
-const passwordValidator = (password)=> {
+const passwordValidator = (password) => {
     let regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!$#?]).{5,}/;
     if (regex.test(password)) {
         return true;
@@ -68,9 +68,9 @@ const passwordValidator = (password)=> {
  * @param confirmedPassword
  * @returns {boolean}
  */
-const passwordConfirm = (password, confirmedPassword)=>{
+const passwordConfirm = (password, confirmedPassword) => {
     return (password === confirmedPassword);
- };
+};
 
 /**
  * Returns the hashed value of the password
@@ -88,13 +88,13 @@ const passwordHash = (password) => {
  */
 const signUpAction = (req, res) => {
     let post = req.body;
-    emailValidator(post.email, (emailStatus)=>{
+    emailValidator(post.email, (emailStatus) => {
         console.log(emailStatus);
 
         if (emailStatus === true) {
 
             let passwordStatus = passwordValidator(post.password);
-            if (passwordStatus === true){
+            if (passwordStatus === true) {
 
                 if (passwordConfirm(post.password, post.passwordConfirmed)) {
 
@@ -127,7 +127,7 @@ const signUpAction = (req, res) => {
 
                     });
 
-                }else {
+                } else {
                     console.log("Le mot de passe doit etre le meme");
                     res.status(400).send({
                         error: "Le mot de passe doit etre le meme"
@@ -155,15 +155,15 @@ const signUpAction = (req, res) => {
  * @param req
  * @param res
  */
-const loginAction =  (req, res) => {
+const loginAction = (req, res) => {
     let post = req.body;
 
-    if( post.email && post.password ){
+    if (post.email && post.password) {
 
         mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', (err) => {
             console.log('connected');
             //one needs to close the connection
-            if(err){
+            if (err) {
                 res.status(500).send({
                     error: err
                 });
@@ -183,7 +183,7 @@ const loginAction =  (req, res) => {
                 }
                 console.log(user);
 
-                if ( user.length ) {
+                if (user.length) {
                     if (hash.verify(post.password, user[0].password)) {
                         app.locals.users.push(user[0]); //localStorage.setItem('user', user);
                         res.status(200).send(user[0]);
@@ -221,8 +221,8 @@ const loginAction =  (req, res) => {
  */
 const logoutAction = (req, res) => {
     const userId = req.params.userId;
-    for( let i=0; i< app.locals.users.length; i++){
-        if( app.locals.users[i]._id == userId){
+    for (let i = 0; i < app.locals.users.length; i++) {
+        if (app.locals.users[i]._id == userId) {
             app.locals.users.splice(i, 1);
             res.status(200).send({
                 success: 'Vous êtes deconnecté'
@@ -230,11 +230,16 @@ const logoutAction = (req, res) => {
             return;
         }
     }
-    res.status(500).send({error: "Impossible de deconnecter user"});
+    res.status(500).send({ error: "Impossible de deconnecter user" });
 };
 
 module.exports = {
     signUpAction: signUpAction,
     loginAction: loginAction,
-    logoutAction: logoutAction
+    logoutAction: logoutAction,
+
+    emailValidator: emailValidator,
+    passwordValidator: passwordValidator,
+    passwordConfirm: passwordConfirm,
+    passwordHash: passwordHash
 };

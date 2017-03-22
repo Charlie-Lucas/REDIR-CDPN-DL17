@@ -37,7 +37,7 @@ const idValidator = (id) => {
 
     let regex1 = new RegExp(filter1);
 
-    if (url.match(regex1)) {
+    if (id.match(regex1)) {
         return true;
     } else {
         return false;
@@ -118,7 +118,7 @@ const removeAction = (req, res) => {
         mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
             console.log('connected');
 
-            UrlModel.remove({_id: urlId}, (err, response) => {
+            UrlModel.remove({ _id: urlId }, (err, response) => {
                 if (err) {
                     res.send({
                         error: "Echec de suppression"
@@ -145,7 +145,7 @@ const getUrlsAction = (req, res) => {
         mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
             console.log('connected');
 
-            UrlModel.find({userId: userId}, (err, response) => {
+            UrlModel.find({ userId: userId }, (err, response) => {
                 if (err) {
                     res.send({
                         error: "Echec"
@@ -171,7 +171,7 @@ const getBigUrlByMinUrl = (req, res) => {
     mongoose.connect('mongodb://momo-bibi:imieimie@ds135820.mlab.com:35820/momo-bibi', () => {
         console.log('connected');
 
-        UrlModel.find({urlMinified: 'http://' + config.BASE_URL + '/' + urlMin}, (err, response) => {
+        UrlModel.find({ urlMinified: 'http://' + config.BASE_URL + '/' + urlMin }, (err, response) => {
             if (err) {
                 res.send({
                     error: "Echec"
@@ -192,5 +192,8 @@ module.exports = {
     addAction: addAction,
     removeAction: removeAction,
     getUrlsAction: getUrlsAction,
-    getBigUrlByMinUrl: getBigUrlByMinUrl
+    getBigUrlByMinUrl: getBigUrlByMinUrl,
+
+    urlValidator: urlValidator,
+    idValidator: idValidator
 };
