@@ -14,14 +14,14 @@ dependencies:
         - sudo dpkg -i google-chrome-stable_current_amd64.deb
         - webdriver-manager update
         - npm install
-        - cd dev-front && npm install && bower install && cd ..
+        - cd dev-back/public && bower install && cd ../..
 
 test:
     pre:
         - webdriver-manager start:
             background: true
-        - cd dev-front && gulp serve && cd ..:
+        - node dev-back/app.js:
             background: true
         - sleep 5
     override:
-        - cd dev-front && npm run test && cd ..
+        - npm run test
